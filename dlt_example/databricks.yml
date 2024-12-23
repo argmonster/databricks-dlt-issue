@@ -1,0 +1,37 @@
+bundle:
+  name: dlt_example
+
+sync:
+  paths:
+    - ".."
+
+variables:
+  repo_name:
+    description: repo name
+    default: databricks-support
+  repo_root:
+    description: repo root directory (without /workspace prefix)
+    default: /Repos/${workspace.current_user.userName}
+
+targets:
+  user:
+    mode: development
+    default: true
+    workspace: 
+      root_path: ${var.repo_root}
+      file_path: ${workspace.root_path}/${var.repo_name}
+      state_path: /Users/${workspace.current_user.userName}/${var.repo_name}
+      artifact_path: /Users/${workspace.current_user.userName}/${var.repo_name}
+
+resources:
+  pipelines:
+    example:
+      name: databricks_support_example
+      catalog: engineering_tim
+      target: support_example
+      clusters:
+        - node_type_id: Standard_D8s_v5
+      libraries:
+        - file:
+            path: ${var.repo_root}/databricks-support/${bundle.name}/src/foobar.py
+
